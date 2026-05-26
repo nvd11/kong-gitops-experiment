@@ -1,0 +1,5 @@
+ingressController:
+  enabled: true
+  ingressClass: kong-k8s
+env:
+  database: "off"

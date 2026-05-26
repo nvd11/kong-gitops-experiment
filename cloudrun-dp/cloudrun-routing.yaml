@@ -1,0 +1,78 @@
+# 1. ExternalName Service Definitions (映射到真实的 Cloud Run URL)
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloudrun-svc-1
+spec:
+  type: ExternalName
+  externalName: svc1-placeholder-xyz.a.run.app
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloudrun-svc-2
+spec:
+  type: ExternalName
+  externalName: svc2-placeholder-xyz.a.run.app
+---
+# 2. Kong Plugins (核心痛点：重写 Host Header 以骗过 GCP 边界校验)
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: rewrite-host-run-1
+config:
+  replace:
+    headers:
+    - "Host: svc1-placeholder-xyz.a.run.app"
+plugin: request-transformer
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: rewrite-host-run-2
+config:
+  replace:
+    headers:
+    - "Host: svc2-placeholder-xyz.a.run.app"
+plugin: request-transformer
+---
+# 3. Ingress Routing (绑定插件和外部服务)
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: external-cloudrun-ingress-1
+  annotations:
+    konghq.com/plugins: rewrite-host-run-1
+spec:
+  ingressClassName: kong-cloudrun
+  rules:
+  - host: cloud.boss.com
+    http:
+      paths:
+      - path: /run1
+        pathType: Prefix
+        backend:
+          service:
+            name: cloudrun-svc-1
+            port:
+              number: 443
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: external-cloudrun-ingress-2
+  annotations:
+    konghq.com/plugins: rewrite-host-run-2
+spec:
+  ingressClassName: kong-cloudrun
+  rules:
+  - host: cloud.boss.com
+    http:
+      paths:
+      - path: /run2
+        pathType: Prefix
+        backend:
+          service:
+            name: cloudrun-svc-2
+            port:
+              number: 443
