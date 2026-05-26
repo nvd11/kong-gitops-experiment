@@ -1,0 +1,25 @@
+_format_version: "3.0"
+services:
+- name: cloudrun-svc-1
+  url: https://your-cloudrun-1-url.a.run.app
+  routes:
+  - name: route-cloudrun-1
+    paths:
+    - /run1
+    strip_path: false
+  plugins:
+  - name: kong-gcp-identity
+    config:
+      audience: https://your-cloudrun-1-url.a.run.app
+
+- name: cloudrun-svc-2
+  url: https://your-cloudrun-2-url.a.run.app
+  routes:
+  - name: route-cloudrun-2
+    paths:
+    - /run2
+    strip_path: false
+  plugins:
+  - name: kong-gcp-identity
+    config:
+      audience: https://your-cloudrun-2-url.a.run.app

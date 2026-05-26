@@ -1,5 +1,0 @@
-ingressController:
-  enabled: true
-  ingressClass: kong-cloudrun
-env:
-  database: "off"
