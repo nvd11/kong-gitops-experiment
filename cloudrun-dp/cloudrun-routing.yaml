@@ -1,52 +1,37 @@
-# 1. ExternalName Service Definitions (映射到真实的 Cloud Run URL)
+# 1. Serverless NEG Service Definitions (GCP 原生内网路由)
+# 注意：在 GKE 中调用 Internal Cloud Run，最佳实践是使用 Serverless NEG，而不是纯 ExternalName。
+# 这里我们定义标准 K8s Service，并通过注解绑定到后端的 Cloud Run NEG。
 apiVersion: v1
 kind: Service
 metadata:
   name: cloudrun-svc-1
+  annotations:
+    cloud.google.com/neg: '{"ingress": true}' # 示意：实际需配置对应的 Serverless NEG
 spec:
-  type: ExternalName
-  externalName: svc1-placeholder-xyz.a.run.app
+  ports:
+  - port: 80
+    targetPort: 8080
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: cloudrun-svc-2
+  annotations:
+    cloud.google.com/neg: '{"ingress": true}' 
 spec:
-  type: ExternalName
-  externalName: svc2-placeholder-xyz.a.run.app
+  ports:
+  - port: 80
+    targetPort: 8080
 ---
-# 2. Kong Plugins (核心痛点：重写 Host Header 以骗过 GCP 边界校验)
-apiVersion: configuration.konghq.com/v1
-kind: KongPlugin
-metadata:
-  name: rewrite-host-run-1
-config:
-  replace:
-    headers:
-    - "Host: svc1-placeholder-xyz.a.run.app"
-plugin: request-transformer
----
-apiVersion: configuration.konghq.com/v1
-kind: KongPlugin
-metadata:
-  name: rewrite-host-run-2
-config:
-  replace:
-    headers:
-    - "Host: svc2-placeholder-xyz.a.run.app"
-plugin: request-transformer
----
-# 3. Ingress Routing (绑定插件和外部服务)
+# 2. Ingress Routing (纯内网，不再需要 Host Rewrite 欺骗)
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: external-cloudrun-ingress-1
-  annotations:
-    konghq.com/plugins: rewrite-host-run-1
+  name: internal-cloudrun-ingress-1
 spec:
   ingressClassName: kong-cloudrun
   rules:
-  - host: cloud.boss.com
+  - host: api.gcp.boss.com
     http:
       paths:
       - path: /run1
@@ -55,18 +40,16 @@ spec:
           service:
             name: cloudrun-svc-1
             port:
-              number: 443
+              number: 80
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: external-cloudrun-ingress-2
-  annotations:
-    konghq.com/plugins: rewrite-host-run-2
+  name: internal-cloudrun-ingress-2
 spec:
   ingressClassName: kong-cloudrun
   rules:
-  - host: cloud.boss.com
+  - host: api.gcp.boss.com
     http:
       paths:
       - path: /run2
@@ -75,4 +58,4 @@ spec:
           service:
             name: cloudrun-svc-2
             port:
-              number: 443
+              number: 80
