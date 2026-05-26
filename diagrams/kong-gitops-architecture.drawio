@@ -1,0 +1,130 @@
+<mxfile host="Electron" modified="2026-05-26T18:00:00.000Z" agent="Mozilla/5.0" version="22.1.2" type="device">
+  <diagram id="kong-gitops" name="Architecture">
+    <mxGraphModel dx="1434" dy="844" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- GitHub Repo Box -->
+        <mxCell id="github_repo" value="GitHub Repository&#10;(kong-gitops-experiment)&#10;Single Source of Truth" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontStyle=1;strokeColor=#666666;fontColor=#333333;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="1080" height="120" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="github_k8s_code" value="k8s-dp/&#10;(ingressClassName: kong-k8s)&#10;Internal Routes" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="220" y="80" width="200" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="github_cr_code" value="cloudrun-dp/&#10;(ingressClassName: kong-cloudrun)&#10;External Routes + Host Rewrite" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="720" y="80" width="200" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- ArgoCD Box -->
+        <mxCell id="argocd" value="ArgoCD / GitOps Engine&#10;(Syncs YAMLs to K8s API)" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="470" y="220" width="220" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- K8s API -->
+        <mxCell id="k8s_api" value="Kubernetes API Server (etcd)&#10;Holds CRDs &amp; Ingresses" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="470" y="360" width="220" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- GKE Cluster Container -->
+        <mxCell id="gke_cluster" value="GKE Cluster" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#333333;strokeWidth=2;dashed=1;verticalAlign=top;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="40" y="500" width="1080" height="280" as="geometry" />
+        </mxCell>
+
+        <!-- Data Plane 1: K8s -->
+        <mxCell id="dp1_box" value="Data Plane 1 (K8s DB-Less)" style="swimlane;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="80" y="540" width="340" height="200" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="kic1" value="KIC 1&#10;(ingress-class: kong-k8s)&#10;Translates K8s API -&gt; Kong Config" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;" vertex="1" parent="dp1_box">
+          <mxGeometry x="20" y="40" width="300" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="proxy1" value="Kong Proxy 1 (Memory)&#10;Routes: api.internal.boss.com" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontStyle=1" vertex="1" parent="dp1_box">
+          <mxGeometry x="20" y="120" width="300" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Data Plane 2: Cloud Run -->
+        <mxCell id="dp2_box" value="Data Plane 2 (Cloud Run DB-Less)" style="swimlane;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="740" y="540" width="340" height="200" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="kic2" value="KIC 2&#10;(ingress-class: kong-cloudrun)&#10;Translates K8s API -&gt; Kong Config" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;" vertex="1" parent="dp2_box">
+          <mxGeometry x="20" y="40" width="300" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="proxy2" value="Kong Proxy 2 (Memory)&#10;Routes: cloud.boss.com&#10;+ request-transformer plugin" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontStyle=1" vertex="1" parent="dp2_box">
+          <mxGeometry x="20" y="120" width="300" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Upstreams -->
+        <mxCell id="k8s_svc" value="K8s internal API Services&#10;(svc1.local, svc2.local)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="175" y="820" width="150" height="80" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="cr_svc" value="GCP Cloud Run Services&#10;(Serverless Endpoint)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="835" y="820" width="150" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Connections (Arrows) -->
+        <mxCell id="arrow_gh_argocd" edge="1" parent="1" source="github_repo" target="argocd">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow_argocd_api" edge="1" parent="1" source="argocd" target="k8s_api">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow_api_kic1" edge="1" parent="1" source="k8s_api" target="kic1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="250" y="400" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow_api_kic2" edge="1" parent="1" source="k8s_api" target="kic2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="910" y="400" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="arrow_kic1_proxy1" edge="1" parent="1" source="kic1" target="proxy1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow_kic2_proxy2" edge="1" parent="1" source="kic2" target="proxy2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow_proxy1_svc" edge="1" parent="1" source="proxy1" target="k8s_svc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="arrow_proxy2_svc" edge="1" parent="1" source="proxy2" target="cr_svc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- User Traffic -->
+        <mxCell id="user_internal" value="Internal K8s Traffic" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="80" y="360" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow_user1_proxy1" edge="1" parent="1" source="user_internal" target="proxy1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="user_external" value="External Internet Traffic" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="960" y="360" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow_user2_proxy2" edge="1" parent="1" source="user_external" target="proxy2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
