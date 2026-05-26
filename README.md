@@ -1,5 +1,7 @@
 # Kong GitOps Experiment: Heterogeneous Dual-Gateway Architecture
 
+![Architecture Blueprint](diagrams/architecture-preview.png)
+
 本仓库演示了如何在极度严苛的网络隔离与安全合规限制下，利用 **Kong (DB-less)** 和 **GitOps** 理念，构建一个管理混合云异构计算后端（本地 K8s 原生微服务 + GCP Cloud Run 无服务器架构）的统一流量管控平台。
 
 ## 🎯 业务背景与架构痛点 (Requirements)
@@ -51,7 +53,8 @@ kong-gitops-experiment/
 │       └── kong-gcp-identity/   # 核心鉴权组件：绕过 GCP Org Policy 的 Lua 拦截器
 │
 └── diagrams/
-    └── kong-gitops-architecture.drawio # 最新定稿的系统架构拓扑图
+    ├── kong-gitops-architecture.drawio # 最新定稿的系统架构拓扑图
+    └── architecture-preview.png        # 架构预览图
 ```
 
 ---
