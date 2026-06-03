@@ -114,7 +114,10 @@ sudo systemctl start k3s
 1. **创建命名空间并安装**:
    ```bash
    kubectl create namespace argocd
-   kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+   
+   # 避坑指南：ArgoCD 的 CRD 声明文件极大，如果使用传统的客户端 Apply 会触发 Annotation 太长 (超过 262144 bytes) 的报错。
+   # 必须加上 --server-side 参数，将合并压力转移给 K8s 服务端！
+   kubectl apply --server-side -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
    ```
 
 2. **获取初始管理员密码**:
