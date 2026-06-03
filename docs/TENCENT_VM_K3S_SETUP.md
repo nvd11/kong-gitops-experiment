@@ -43,8 +43,26 @@
 
 如果您希望在本地电脑（例如您的笔记本/台式机）上直接使用 `kubectl` 操作远端的 K3s 集群，请按以下步骤操作：
 
-**1. 开放云服务器防火墙端口**
-登录腾讯云控制台，在轻量应用服务器的【防火墙】中，添加一条放通 **TCP 6443** 端口的规则（或者使用 `tccli` 命令行配置）。
+**1. 开放云服务器防火墙端口 (控制台 或 tccli)**
+*方法 A：通过网页控制台*
+登录腾讯云控制台，在轻量应用服务器的【防火墙】中，添加一条放通 **TCP 6443** 端口的规则。同时建议一并放通后续 ArgoCD 需要的 **TCP 30080** 端口。
+
+*方法 B：使用 tccli 自动化命令行（极客推荐）*
+```bash
+# 1. 安装 tccli (无视 CPU 架构的纯 Python 方案)
+pip3 install tccli --user --break-system-packages  # 如果有 pipx 推荐使用 pipx install tccli
+
+# 2. 配置密钥 (需在腾讯云 CAM 生成 API 密钥，推荐赋予 QcloudResourceFullAccess 角色)
+tccli configure
+# 按提示依次输入 SecretId, SecretKey, region (如 ap-guangzhou), output format (json)
+
+# 3. 获取您的 Lighthouse 轻量服务器实例 ID
+tccli lighthouse DescribeInstances | grep InstanceId
+
+# 4. 一键写入防火墙规则放通 6443 和 30080 端口 (请将 lhins-xxxx 替换为实际的 InstanceId)
+tccli lighthouse CreateFirewallRules --InstanceId lhins-xxxx --FirewallRules \
+  '[{"Protocol":"TCP","Port":"6443","Action":"ACCEPT","CidrBlock":"0.0.0.0/0","FirewallRuleDescription":"K3s API Server"}, {"Protocol":"TCP","Port":"30080","Action":"ACCEPT","CidrBlock":"0.0.0.0/0","FirewallRuleDescription":"ArgoCD UI"}]'
+```
 
 **2. 在本地电脑安装纯净版 kubectl (以 Linux 为例，告别臃肿的 snap)**
 ```bash
