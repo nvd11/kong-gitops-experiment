@@ -17,8 +17,9 @@
    ```bash
    # 核心注意：因为我们接下来要做 Kong 的网关实验，必须通过 --disable traefik 参数把 K3s 默认的 Traefik 彻底剥离，
    # 否则 Traefik 会霸占 80 和 443 端口，导致 Kong 无法正常监听！
+   # 避坑指南：必须加上 --tls-san 公网IP，否则后续在本地电脑远程连接 K3s 时会报 x509 证书错误。
    # (国内主机推荐使用 Rancher 镜像源加速安装)
-   curl -sfL https://rancher-mirror.rancher.cn/k3s/k3s-install.sh | INSTALL_K3S_MIRROR=cn INSTALL_K3S_EXEC="--disable traefik" sh -
+   curl -sfL https://rancher-mirror.rancher.cn/k3s/k3s-install.sh | INSTALL_K3S_MIRROR=cn INSTALL_K3S_EXEC="--disable traefik --tls-san 43.139.214.231" sh -
    ```
 
 3. **配置普通用户 (gateman) 的 kubectl 权限**:
@@ -35,6 +36,37 @@
    # 验证集群健康状态
    kubectl get nodes
    ```
+
+---
+
+## 💻 附加：配置本地电脑远程管理 K3s (Remote kubectl)
+
+如果您希望在本地电脑（例如您的笔记本/台式机）上直接使用 `kubectl` 操作远端的 K3s 集群，请按以下步骤操作：
+
+**1. 开放云服务器防火墙端口**
+登录腾讯云控制台，在轻量应用服务器的【防火墙】中，添加一条放通 **TCP 6443** 端口的规则（或者使用 `tccli` 命令行配置）。
+
+**2. 在本地电脑安装纯净版 kubectl (以 Linux 为例，告别臃肿的 snap)**
+```bash
+# 下载官方编译的独立二进制文件
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+# 赋予执行权限并移至系统目录
+chmod +x kubectl
+sudo mv kubectl /usr/local/bin/
+```
+
+**3. 将服务器的 Kubeconfig 拷贝到本地并替换 IP**
+```bash
+# 将服务端的配置文件拉取到本地
+scp gateman@43.139.214.231:/home/gateman/.kube/config ~/.kube/kube-tencent-k3s.config
+
+# 避坑指南：默认生成的配置里 IP 是 127.0.0.1，必须替换为腾讯云的公网 IP
+sed -i 's/127.0.0.1/43.139.214.231/g' ~/.kube/kube-tencent-k3s.config
+
+# 声明环境变量后测试连接
+export KUBECONFIG=~/.kube/kube-tencent-k3s.config
+kubectl get nodes
+```
 
 ---
 
