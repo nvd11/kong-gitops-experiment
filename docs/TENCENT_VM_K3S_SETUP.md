@@ -15,8 +15,8 @@
 
 2. **一键安装定制版 K3s**:
    ```bash
-   # 使用 --disable traefik 参数剥离默认网关
-   curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--disable traefik" sh -
+   # 国内主机推荐使用 Rancher 镜像源，并用 --disable traefik 参数剥离默认网关
+   curl -sfL https://rancher-mirror.rancher.cn/k3s/k3s-install.sh | INSTALL_K3S_MIRROR=cn INSTALL_K3S_EXEC="--disable traefik" sh -
    ```
 
 3. **配置普通用户 (gateman) 的 kubectl 权限**:
@@ -25,6 +25,10 @@
    mkdir -p ~/.kube
    sudo cp /etc/rancher/k3s/k3s.yaml ~/.kube/config
    sudo chown gateman:gateman ~/.kube/config
+   
+   # 避坑指南：K3s 软链接的 kubectl 默认读取 /etc 路径，需显式声明 KUBECONFIG 变量
+   echo 'export KUBECONFIG=~/.kube/config' >> ~/.bashrc
+   source ~/.bashrc
    
    # 验证集群健康状态
    kubectl get nodes
