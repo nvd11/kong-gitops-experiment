@@ -122,6 +122,17 @@ sudo systemctl start k3s
 
 2. **获取初始管理员密码**:
    ```bash
+   # 避坑指南：如果发现 Pod 一直处于 ContainerCreating 状态，很可能是国内网络无法拉取 K3s 的 pause 基础镜像。
+   # 请在服务器上配置国内加速源：
+   # cat << 'EOF' | sudo tee /etc/rancher/k3s/registries.yaml
+   # mirrors:
+   #   docker.io:
+   #     endpoint:
+   #       - "https://docker.m.daocloud.io"
+   #       - "https://docker.nju.edu.cn"
+   # EOF
+   # sudo systemctl restart k3s
+   
    kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
    ```
 
