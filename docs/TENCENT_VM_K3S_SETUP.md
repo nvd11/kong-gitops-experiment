@@ -86,6 +86,27 @@ export KUBECONFIG=~/.kube/kube-tencent-k3s.config
 kubectl get nodes
 ```
 
+**⚠️ 故障排查：如果本地连接报错 `x509: certificate is valid for 10.x.x.x, 127.0.0.1, not 43.139.214.231`**
+如果您在最初安装 K3s 时**漏掉了 `--tls-san` 参数**，会导致 K3s 生成的证书里没有包含公网 IP。补救措施如下：
+```bash
+# 1. 登录服务器，修改 K3s 的 systemd 服务文件
+sudo sed -i 's/    server \\/    server \\\n    --tls-san 43.139.214.231 \\/g' /etc/systemd/system/k3s.service
+
+# 2. 重新加载 systemd 并停止 K3s
+sudo systemctl daemon-reload
+sudo systemctl stop k3s
+
+# 3. 极其重要：删除旧的 API Server 证书，逼迫 K3s 重新生成带有公网 IP 的新证书
+sudo rm -rf /var/lib/rancher/k3s/server/tls/serving-kube-apiserver.crt \
+            /var/lib/rancher/k3s/server/tls/serving-kube-apiserver.key \
+            /var/lib/rancher/k3s/server/tls/dynamic-cert.json
+            
+# 4. 启动 K3s
+sudo systemctl start k3s
+
+# 5. 最后，别忘了把服务器上新生成的 /etc/rancher/k3s/k3s.yaml 重新覆盖到本地电脑！
+```
+
 ---
 
 ## 🧠 阶段二：部署控制面 (CP1) - ArgoCD
