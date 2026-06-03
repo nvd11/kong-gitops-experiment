@@ -15,7 +15,9 @@
 
 2. **一键安装定制版 K3s**:
    ```bash
-   # 国内主机推荐使用 Rancher 镜像源，并用 --disable traefik 参数剥离默认网关
+   # 核心注意：因为我们接下来要做 Kong 的网关实验，必须通过 --disable traefik 参数把 K3s 默认的 Traefik 彻底剥离，
+   # 否则 Traefik 会霸占 80 和 443 端口，导致 Kong 无法正常监听！
+   # (国内主机推荐使用 Rancher 镜像源加速安装)
    curl -sfL https://rancher-mirror.rancher.cn/k3s/k3s-install.sh | INSTALL_K3S_MIRROR=cn INSTALL_K3S_EXEC="--disable traefik" sh -
    ```
 
