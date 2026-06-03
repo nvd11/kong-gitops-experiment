@@ -168,38 +168,67 @@ sudo systemctl start k3s
 
 ---
 
-## 🐍 阶段四：构建微服务靶标 (FastAPI)
+## 🐍 阶段四：构建微服务靶标 (Quarkus Native)
 
-1. **安装 Docker (用于本地打包镜像)**:
+1. **安装构建工具 (Maven & GraalVM)**:
+   我们将在服务器上直接编译 Quarkus 项目。为了极致的内存占用，我们将使用 GraalVM 编译成本地可执行文件 (Native Image)。
    ```bash
-   sudo apt update && sudo apt install -y docker.io
-   sudo usermod -aG docker gateman
+   sudo apt update && sudo apt install -y default-jdk maven
    ```
-   *(退出重进终端以使 Docker 权限生效)*
 
-2. **编写代码与 Dockerfile**:
-   创建 `main.py`:
-   ```python
-   from fastapi import FastAPI
-   app = FastAPI()
-   @app.get("/svc1")
-   def read_root():
-       return {"status": "ok", "service": "svc1", "node": "tencent-cloud"}
+2. **创建 Quarkus 项目**:
+   ```bash
+   mvn io.quarkus.platform:quarkus-maven-plugin:3.8.2:create \
+       -DprojectGroupId=org.acme \
+       -DprojectArtifactId=quarkus-svc \
+       -Dextensions="resteasy-reactive,resteasy-reactive-jackson"
+   cd quarkus-svc
    ```
-   创建 `Dockerfile`:
+
+3. **修改业务代码**:
+   修改 `src/main/java/org/acme/GreetingResource.java`:
+   ```java
+   package org.acme;
+
+   import jakarta.ws.rs.GET;
+   import jakarta.ws.rs.Path;
+   import jakarta.ws.rs.Produces;
+   import jakarta.ws.rs.core.MediaType;
+   import java.util.Map;
+
+   @Path("/svc1")
+   public class GreetingResource {
+       @GET
+       @Produces(MediaType.APPLICATION_JSON)
+       public Map<String, String> hello() {
+           return Map.of(
+               "status", "ok",
+               "service", "svc1",
+               "node", "tencent-cloud"
+           );
+       }
+   }
+   ```
+
+4. **编写 Dockerfile (针对 JVM 或 Native)**:
+   如果为了快速演示，我们这里使用 JVM 模式的 Dockerfile 示例（如果您熟悉 GraalVM，可替换为 Native 模式构建）：
+   在项目根目录创建 `Dockerfile.jvm`:
    ```dockerfile
-   FROM python:3.9-slim
+   FROM eclipse-temurin:17-jre-alpine
    WORKDIR /app
-   RUN pip install fastapi uvicorn
-   COPY main.py .
-   CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+   COPY target/quarkus-app/lib/ /app/lib/
+   COPY target/quarkus-app/*.jar /app/
+   COPY target/quarkus-app/app/ /app/app/
+   COPY target/quarkus-app/quarkus/ /app/quarkus/
+   CMD ["java", "-jar", "/app/quarkus-run.jar"]
    ```
 
-3. **打包并直接喂给 K3s**:
+5. **编译并直接喂给 K3s**:
    这是一种高级黑科技，避免了把测试镜像推送到公网 Registry：
    ```bash
-   docker build -t my-fastapi-svc:v1 .
-   docker save my-fastapi-svc:v1 > svc1.tar
+   ./mvnw clean package
+   sudo docker build -f Dockerfile.jvm -t my-quarkus-svc:v1 .
+   sudo docker save my-quarkus-svc:v1 > svc1.tar
    sudo k3s ctr images import svc1.tar
    ```
 
@@ -208,9 +237,9 @@ sudo systemctl start k3s
 ## 🔗 阶段五：GitOps 自动化贯通
 
 1. **编写 K8s 声明文件**:
-   在我们的 GitHub 仓库 (`kong-gitops-experiment`) 中创建 `Deployment`, `Service`, 和 `Ingress` 的 YAML 文件，镜像指定为我们刚才导入的 `my-fastapi-svc:v1`，Ingress Class 指定为 `kong-k8s`。
+   在我们的 GitHub 仓库 (`kong-gitops-experiment`) 中创建 `Deployment`, `Service`, 和 `Ingress` 的 YAML 文件，镜像指定为我们刚才导入的 `my-quarkus-svc:v1`，Ingress Class 指定为 `kong-k8s`。
 2. **在 ArgoCD 界面绑定仓库**:
    浏览器访问 `https://43.139.214.231:30080`，登录 ArgoCD。
-   新建 App，指向本仓库的 YAML 所在目录。
+   新建 App，指向本仓库的 YAML 所在目录 (`apps/quarkus-svc`)。
 3. **点击 Sync**：
-   ArgoCD 会自动将 FastAPI 跑起来，并且 Kong 会立刻装载对应的路由规则！通过公网请求您的腾讯云 80 端口，流量打通！
+   ArgoCD 会自动将 Quarkus 微服务跑起来，并且 Kong 会立刻装载对应的路由规则！通过公网请求您的腾讯云 80 端口，流量打通！

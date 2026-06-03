@@ -64,28 +64,33 @@
 
 ---
 
-## 🐍 阶段四：业务微服务构建 (FastAPI 极速版)
+## 🐍 阶段四：业务微服务构建 (Quarkus 极速版)
 
-**目标**：构建两个资源开销极低的 Python 接口服务，作为 Kong 代理的底层靶标。
+**目标**：构建一个基于 Quarkus 现代轻量级框架的 Java 接口服务，作为 Kong 代理的底层靶标。
 
 我们将提供一份标准代码骨架。您可以将其打成 Docker 镜像：
-**`main.py` 示例**:
-```python
-from fastapi import FastAPI
-app = FastAPI()
+**`GreetingResource.java` 示例**:
+```java
+package org.acme;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+import java.util.Map;
 
-@app.get("/svc1") # svc2 则改为 /svc2
-def read_root():
-    return {"service": "Service-1", "message": "Hit successfully via Kong DP1!"}
+@Path("/svc1")
+public class GreetingResource {
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Map<String, String> hello() {
+        return Map.of("service", "Service-1", "message", "Hit successfully via Kong DP1!");
+    }
+}
 ```
-**`Dockerfile` 示例**:
-```dockerfile
-FROM python:3.9-slim
-WORKDIR /app
-RUN pip install fastapi uvicorn
-COPY main.py .
-EXPOSE 8000
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+**编译与打包 (在 Quarkus 项目下)**:
+```bash
+./mvnw clean package
+docker build -f src/main/docker/Dockerfile.jvm -t my-quarkus-svc:v1 .
 ```
 *(为了极致的本地开发速度，您可以直接使用 `k3s ctr images import` 将本地打好的镜像直接喂给 K3s 缓存，省去上传 DockerHub 的烦恼！)*
 
@@ -93,7 +98,7 @@ CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 
 ## 🔗 阶段五：闭环！GitOps 链路大贯通
 
-**目标**：让 ArgoCD 接管 GitHub 仓库，自动拉起 FastAPI 业务 Pod，并自动挂载 Kong 路由。
+**目标**：让 ArgoCD 接管 GitHub 仓库，自动拉起 Quarkus 业务 Pod，并自动挂载 Kong 路由。
 
 1. **在 GitHub 补充 K8s YAML**：
    在仓库的 `k8s-site/business-apps/` 目录下推入 `Deployment` 和 `Service` 的 YAML。
