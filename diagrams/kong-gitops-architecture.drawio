@@ -1,4 +1,4 @@
-<mxfile host="Electron" modified="2026-05-26T19:20:00.000Z" agent="Mozilla/5.0" version="22.1.2" type="device">
+<mxfile host="Electron" modified="2026-06-05T20:42:00.000Z" agent="Mozilla/5.0" version="22.1.2" type="device">
   <diagram id="kong-gitops-cp-details" name="Architecture">
     <mxGraphModel dx="1434" dy="844" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="900" math="0" shadow="0">
       <root>
@@ -28,9 +28,14 @@
           <mxGeometry x="450" y="150" width="380" height="30" as="geometry" />
         </mxCell>
 
-        <!-- Site 1: LAN -->
-        <mxCell id="lan_cluster" value="Site 1: Local Area Network (Tailscale) / Self-Hosted K8s" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f9f9f9;strokeColor=#6c8ebf;strokeWidth=3;verticalAlign=top;fontStyle=1;fontSize=14;" vertex="1" parent="1">
-          <mxGeometry x="40" y="190" width="560" height="540" as="geometry" />
+        <!-- Site 3: OCI -->
+        <mxCell id="oci_cloud" value="Site 3: Oracle Cloud Infrastructure (OCI)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=3;verticalAlign=top;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="40" y="190" width="560" height="200" as="geometry" />
+        </mxCell>
+
+        <!-- Site 1: Tencent Cloud -->
+        <mxCell id="lan_cluster" value="Site 1: Tencent Cloud (K3s Cluster)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f9f9f9;strokeColor=#6c8ebf;strokeWidth=3;verticalAlign=top;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="40" y="410" width="560" height="320" as="geometry" />
         </mxCell>
 
         <!-- Site 2: GCP -->
@@ -38,17 +43,48 @@
           <mxGeometry x="680" y="190" width="560" height="540" as="geometry" />
         </mxCell>
 
-        <!-- CP1 Box -->
-        <mxCell id="cp1_box" value="Control Plane 1 (CP1: Autonomous K8s Sync)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#82b366;strokeWidth=2;dashed=1;verticalAlign=top;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="70" y="230" width="380" height="150" as="geometry" />
+        <!-- CP1 Box (OCI) -->
+        <mxCell id="cp1_box" value="Control Plane 1 (ArgoCD Cluster - OCI)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#82b366;strokeWidth=2;dashed=1;verticalAlign=top;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="230" width="460" height="140" as="geometry" />
         </mxCell>
-        <mxCell id="lan_argocd" value="ArgoCD&#10;(Outbound Git Pull)" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#ffffff;strokeColor=#9673a6;fontStyle=1" vertex="1" parent="cp1_box">
-          <mxGeometry x="20" y="40" width="140" height="60" as="geometry" />
+        <mxCell id="lan_argocd" value="ArgoCD Server&#10;(free-amd-vm2)" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#ffffff;strokeColor=#9673a6;fontStyle=1" vertex="1" parent="cp1_box">
+          <mxGeometry x="20" y="40" width="160" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="lan_api" value="Local K8s API" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1" vertex="1" parent="cp1_box">
-          <mxGeometry x="200" y="35" width="150" height="70" as="geometry" />
+        <mxCell id="oci_argocd_worker" value="ArgoCD Worker&#10;(free-amd-vm)" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#ffffff;strokeColor=#9673a6;fontStyle=1" vertex="1" parent="cp1_box">
+          <mxGeometry x="250" y="40" width="160" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="a2a1" edge="1" parent="cp1_box" source="lan_argocd" target="lan_api">
+        
+        <mxCell id="a2a1" edge="1" parent="cp1_box" source="lan_argocd" target="oci_argocd_worker">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- K8s API in Tencent -->
+        <mxCell id="tencent_api" value="Tencent K3s API&#10;(TCP 6443)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="230" y="440" width="120" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- ArgoCD Server -> Tencent API -->
+        <mxCell id="argo_to_tencent" edge="1" parent="1" source="lan_argocd" target="tencent_api">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="label_argo_sync" value="Cross-Cloud Sync" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="argo_to_tencent">
+          <mxGeometry x="-0.2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- DP1 (Tencent KIC) -->
+        <mxCell id="dp1_box" value="Data Plane 1 (Kong KIC)" style="swimlane;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="100" y="500" width="300" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="kic1" value="KIC 1 (kong-k8s)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;" vertex="1" parent="dp1_box">
+          <mxGeometry x="20" y="30" width="260" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="proxy1" value="Kong Proxy 1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontStyle=1" vertex="1" parent="dp1_box">
+          <mxGeometry x="20" y="70" width="260" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="tencent_api_to_kic" edge="1" parent="1" source="tencent_api" target="kic1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
@@ -69,17 +105,6 @@
           <mxGeometry x="20" y="110" width="250" height="20" as="geometry" />
         </mxCell>
 
-        <!-- DP1 (Local KIC) -->
-        <mxCell id="dp1_box" value="Data Plane 1 (K8s DB-less)" style="swimlane;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1" vertex="1" parent="1">
-          <mxGeometry x="100" y="400" width="300" height="150" as="geometry" />
-        </mxCell>
-        <mxCell id="kic1" value="KIC 1 (kong-k8s)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;" vertex="1" parent="dp1_box">
-          <mxGeometry x="20" y="40" width="260" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="proxy1" value="Kong Proxy 1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontStyle=1" vertex="1" parent="dp1_box">
-          <mxGeometry x="20" y="100" width="260" height="40" as="geometry" />
-        </mxCell>
-
         <!-- DP2 (GCP VM) -->
         <mxCell id="dp2_box" value="Data Plane 2 (Compute Engine VM)" style="swimlane;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1" vertex="1" parent="1">
           <mxGeometry x="720" y="400" width="480" height="150" as="geometry" />
@@ -92,8 +117,8 @@
         </mxCell>
 
         <!-- Upstreams -->
-        <mxCell id="k8s_svc" value="Local K8s SVCS" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1" vertex="1" parent="1">
-          <mxGeometry x="175" y="610" width="150" height="70" as="geometry" />
+        <mxCell id="k8s_svc" value="Quarkus SVCS" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="175" y="630" width="150" height="70" as="geometry" />
         </mxCell>
         <mxCell id="cr_svc" value="Cloud Run (Internal Ingress)&#10;Google Front End (GFE)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1" vertex="1" parent="1">
           <mxGeometry x="865" y="610" width="190" height="70" as="geometry" />
@@ -118,10 +143,6 @@
           </mxGeometry>
         </mxCell>
         
-        <!-- API to KIC -->
-        <mxCell id="ap2k1" edge="1" parent="1" source="lan_api" target="kic1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
         <!-- decK to VM Admin API -->
         <mxCell id="deck_to_vm" edge="1" parent="1" source="deck_tool" target="vm_kong">
           <mxGeometry relative="1" as="geometry" />
