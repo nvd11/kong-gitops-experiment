@@ -84,7 +84,7 @@
         <mxCell id="argo_to_tencent" edge="1" parent="1" source="cp1_oci1" target="tencent_api">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="label_argo_sync" value="Cross-Cloud Sync" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="argo_to_tencent">
+        <mxCell id="label_argo_sync" value="2. Apply Gateway API YAMLs" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#666666;fontStyle=2;backgroundColor=#ffffff;" vertex="1" connectable="0" parent="argo_to_tencent">
           <mxGeometry x="-0.2" relative="1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
@@ -149,6 +149,11 @@
               <mxPoint x="290" y="150" />
               <mxPoint x="340" y="150" />
             </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="label_pull1" value="1. Git Pull (Fetch YAMLs)" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#666666;fontStyle=2;backgroundColor=#ffffff;" vertex="1" connectable="0" parent="pull1">
+          <mxGeometry x="0.15" relative="1" as="geometry">
+            <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="pull2" edge="1" parent="1" source="gh_actions_runner" target="github_cr_code">
