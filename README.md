@@ -1,6 +1,6 @@
 # Kong GitOps Experiment: Full-Stack Dual-Gateway Architecture
 
-![Architecture Blueprint](diagrams/architecture-preview.png)
+![Architecture Blueprint](diagrams/kong-gitops-architecture.png)
 
 本仓库演示了如何在极度严苛的网络隔离与安全合规限制下，利用 **Kong (DB-less)** 和 **GitOps** 理念，构建一个管理混合云异构计算后端（本地 K8s 原生微服务 + GCP Cloud Run 无服务器架构）的统一流量管控平台。
 
@@ -28,11 +28,11 @@
 我们将控制的大脑与执行的肉体进行了跨云解耦：
 
 * **全栈控制面大脑 (CP1) - 位于 OCI**：
-  * **极限压榨**：在 OCI 的两台 1C1G 免费机上（`free-amd-vm2` 与 `free-amd-vm`），我们通过组件打散调度与开启 Swap 虚拟内存，成功部署了 ArgoCD 的指挥部。
-  * **职责拆分**：`vm2` 作为 Server 负责 UI 与逻辑比对；`vm` 作为 Worker 专门承担极耗内存的 GitHub 代码拉取与 YAML 渲染任务。
+  * **极限压榨**：在一个横跨阿里云、AWS 和 OCI 的 4 节点 Tailscale 混合云大内网中，我们通过组件精细打散（Master 仅作控制面，AWS 承载高负载的 repo-server，OCI 分担 controller 和 Web UI），成功部署了 ArgoCD 的指挥部。
+  * **职责拆分**：`aliyun-master` 作为集群控制面做调度；`aws-moon-proxy` 专门承担极耗内存的 GitHub 代码拉取任务；两台 OCI 节点分担应用巡检和前端入口。
 * **数据面执行节点 (DP1) - 位于 Tencent Cloud**：
   * 腾讯云 K3s 节点专门用作执行地带。ArgoCD (CP1) 通过跨海公网直接连入腾讯云的 K3s API (`TCP 6443`) 进行资源下发。
-  * **网关形态**：Kong Ingress Controller (KIC) + DB-less Kong Proxy。
+  * **网关形态**：Kong Ingress Controller (KIC) 与 DB-less Kong Proxy 部署分离。KIC 独立监听 K3s API 中的 Gateway API 配置，并将配置推送给数据面的 Kong Proxy。
   * **业务形态**：基于 GraalVM 的 Quarkus 极速启动微服务。
 * **工作流**：ArgoCD 持续监听 GitHub 仓库，当业务代码或网关路由发生变更时，自动拉取 YAML 并在远端的腾讯云 API Server 中抹平状态差异（Drift）。
 
@@ -55,8 +55,8 @@ kong-gitops-experiment/
 ├── k8s-dp/                      # 👉 CP1 (OCI ArgoCD) 统管的跨云核心领地 (部署于腾讯云)
 │   ├── business-apps/           # 1. 底层真实业务微服务 (Quarkus Deployment, Service)
 │   │   └── quarkus-svc-app.yaml
-│   └── gateway-config/          # 2. 顶层 Kong 网关路由配置 (Ingress)
-│       └── kong-ingress.yaml
+│   └── gateway-config/          # 2. 顶层 Kong 网关路由配置 (Gateway API: HTTPRoute 等)
+│       └── kong-gateway-route.yaml
 │
 ├── cloudrun-dp/                 # 👉 CP2 (Runner) 监听的公有云领地
 │   ├── kong.yaml                # decK 专用的声明式 Kong 配置文件
