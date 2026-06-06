@@ -91,13 +91,13 @@
         </mxCell>
 
         <!-- DP1 (Tencent KIC) -->
-        <mxCell id="dp1_box" value="Data Plane 1 (Kong KIC)" style="swimlane;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1" vertex="1" parent="1">
+        <mxCell id="dp1_box" value="Target Cluster 1 (Kong CP + DP)" style="swimlane;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1" vertex="1" parent="1">
           <mxGeometry x="100" y="530" width="300" height="110" as="geometry" />
         </mxCell>
-        <mxCell id="kic1" value="KIC 1 (kong-k8s)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;" vertex="1" parent="dp1_box">
+        <mxCell id="kic1" value="Kong Control Plane (KIC)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;" vertex="1" parent="dp1_box">
           <mxGeometry x="20" y="30" width="260" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="proxy1" value="Kong Proxy 1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontStyle=1" vertex="1" parent="dp1_box">
+        <mxCell id="proxy1" value="Kong Data Plane (Proxy)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontStyle=1" vertex="1" parent="dp1_box">
           <mxGeometry x="20" y="70" width="260" height="30" as="geometry" />
         </mxCell>
 
@@ -123,7 +123,7 @@
         </mxCell>
 
         <!-- DP2 (GCP VM) -->
-        <mxCell id="dp2_box" value="Data Plane 2 (Compute Engine VM)" style="swimlane;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1" vertex="1" parent="1">
+        <mxCell id="dp2_box" value="Target Env 2 (Kong DP-only)" style="swimlane;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1" vertex="1" parent="1">
           <mxGeometry x="720" y="400" width="480" height="150" as="geometry" />
         </mxCell>
         <mxCell id="vm_kong" value="Kong DB-less Proxy (kong.service)&#10;Listens internally on 127.0.0.1:8001" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontStyle=1" vertex="1" parent="dp2_box">
