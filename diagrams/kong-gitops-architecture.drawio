@@ -1,167 +1,129 @@
-<mxfile host="Electron" modified="2026-06-06T14:45:00.000Z" agent="Mozilla/5.0" version="22.1.2" type="device">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0">
   <diagram id="kong-gitops-cp-details" name="Architecture">
-    <mxGraphModel dx="1434" dy="844" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="900" math="0" shadow="0">
+    <mxGraphModel dx="1542" dy="1971" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="900" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        
-        <!-- Global Truth -->
-        <mxCell id="global_truth" value="Global Single Source of Truth" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=16;" vertex="1" parent="1">
-          <mxGeometry x="500" y="10" width="280" height="30" as="geometry" />
+        <mxCell id="global_truth" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=16;" value="Global Single Source of Truth" vertex="1">
+          <mxGeometry height="30" width="280" x="500" y="10" as="geometry" />
         </mxCell>
-
-        <!-- GitHub Repo Box -->
-        <mxCell id="github_repo" value="GitHub Repository (kong-gitops-experiment)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontStyle=1;strokeColor=#666666;fontColor=#333333;verticalAlign=top;fontSize=14;" vertex="1" parent="1">
-          <mxGeometry x="100" y="50" width="1080" height="80" as="geometry" />
+        <mxCell id="github_repo" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontStyle=1;strokeColor=#666666;fontColor=#333333;verticalAlign=top;fontSize=14;" value="GitHub Repository (kong-gitops-experiment)" vertex="1">
+          <mxGeometry height="80" width="1080" x="100" y="50" as="geometry" />
         </mxCell>
-        
-        <mxCell id="github_k8s_code" value="k8s-dp/ (Gateway API: HTTPRoute)&#10;Target: Cluster 1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
-          <mxGeometry x="250" y="80" width="180" height="40" as="geometry" />
+        <mxCell id="github_k8s_code" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="k8s-dp/ (Gateway API: HTTPRoute)&#xa;Target: Cluster 1" vertex="1">
+          <mxGeometry height="40" width="180" x="250" y="80" as="geometry" />
         </mxCell>
-        
-        <mxCell id="github_cr_code" value="cloudrun-dp/ (kong.yaml)&#10;Target: DP2" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
-          <mxGeometry x="850" y="80" width="180" height="40" as="geometry" />
+        <mxCell id="github_cr_code" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="cloudrun-dp/ (kong.yaml)&#xa;Target: DP2" vertex="1">
+          <mxGeometry height="40" width="180" x="850" y="80" as="geometry" />
         </mxCell>
-
-        <!-- Decentralized Control Planes Header -->
-        <mxCell id="decentralized_label" value="Decentralized Enforcement (Two Control Planes)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=16;fontColor=#b85450;" vertex="1" parent="1">
-          <mxGeometry x="450" y="150" width="380" height="30" as="geometry" />
+        <mxCell id="decentralized_label" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=16;fontColor=#b85450;" value="Decentralized Enforcement (Two Control Planes)" vertex="1">
+          <mxGeometry height="30" width="380" x="450" y="150" as="geometry" />
         </mxCell>
-
-        <!-- Site 3: OCI & Aliyun & AWS -->
-        <mxCell id="oci_cloud" value="Site 3: Multi-Cloud Tailscale Mesh (Aliyun + OCI + AWS)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=3;verticalAlign=top;fontStyle=1;fontSize=14;" vertex="1" parent="1">
-          <mxGeometry x="40" y="190" width="600" height="230" as="geometry" />
+        <mxCell id="oci_cloud" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=3;verticalAlign=top;fontStyle=1;fontSize=14;" value="Site 3: Multi-Cloud Tailscale Mesh (Aliyun + OCI + AWS)" vertex="1">
+          <mxGeometry height="230" width="600" x="40" y="190" as="geometry" />
         </mxCell>
-
-        <!-- Site 1: Tencent Cloud -->
-        <mxCell id="lan_cluster" value="Site 1: Tencent Cloud (K3s Cluster)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f9f9f9;strokeColor=#6c8ebf;strokeWidth=3;verticalAlign=top;fontStyle=1;fontSize=14;" vertex="1" parent="1">
-          <mxGeometry x="40" y="440" width="560" height="290" as="geometry" />
+        <mxCell id="lan_cluster" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f9f9f9;strokeColor=#6c8ebf;strokeWidth=3;verticalAlign=top;fontStyle=1;fontSize=14;" value="Site 1: Tencent Cloud (K3s Cluster)" vertex="1">
+          <mxGeometry height="290" width="560" x="40" y="440" as="geometry" />
         </mxCell>
-
-        <!-- Site 2: GCP -->
-        <mxCell id="gcp_vpc" value="Site 2: GCP VPC Network" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f9f9f9;strokeColor=#d79b00;strokeWidth=3;verticalAlign=top;fontStyle=1;fontSize=14;" vertex="1" parent="1">
-          <mxGeometry x="680" y="190" width="560" height="540" as="geometry" />
+        <mxCell id="gcp_vpc" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f9f9f9;strokeColor=#d79b00;strokeWidth=3;verticalAlign=top;fontStyle=1;fontSize=14;" value="Site 2: GCP VPC Network" vertex="1">
+          <mxGeometry height="540" width="560" x="680" y="190" as="geometry" />
         </mxCell>
-
-        <!-- CP1 Box (Cross-Cloud) -->
-        <mxCell id="cp1_box" value="Control Plane 1 (ArgoCD Cluster - 4 Nodes)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#82b366;strokeWidth=2;dashed=1;verticalAlign=top;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="60" y="230" width="560" height="170" as="geometry" />
+        <mxCell id="cp1_box" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#82b366;strokeWidth=2;dashed=1;verticalAlign=top;fontStyle=1;" value="Control Plane 1 (ArgoCD Cluster - 4 Nodes)" vertex="1">
+          <mxGeometry height="170" width="560" x="60" y="230" as="geometry" />
         </mxCell>
-        
-        <mxCell id="cp1_aliyun" value="Aliyun Master&#10;(Control Plane)" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#ffffff;strokeColor=#9673a6;fontStyle=1" vertex="1" parent="cp1_box">
-          <mxGeometry x="20" y="30" width="120" height="50" as="geometry" />
+        <mxCell id="cp1_aliyun" parent="cp1_box" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#ffffff;strokeColor=#9673a6;fontStyle=1" value="Aliyun Master&#xa;(Control Plane)" vertex="1">
+          <mxGeometry height="50" width="120" x="20" y="30" as="geometry" />
         </mxCell>
-        
-        <mxCell id="cp1_aws" value="AWS Worker&#10;(repo-server, redis)" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#ffffff;strokeColor=#9673a6;fontStyle=1" vertex="1" parent="cp1_box">
-          <mxGeometry x="160" y="30" width="140" height="50" as="geometry" />
+        <mxCell id="cp1_aws" parent="cp1_box" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#ffffff;strokeColor=#9673a6;fontStyle=1" value="AWS Worker&#xa;(repo-server, redis)" vertex="1">
+          <mxGeometry height="50" width="140" x="160" y="30" as="geometry" />
         </mxCell>
-        
-        <mxCell id="cp1_oci1" value="OCI Worker 1&#10;(app-controller)" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#ffffff;strokeColor=#9673a6;fontStyle=1" vertex="1" parent="cp1_box">
-          <mxGeometry x="320" y="30" width="110" height="50" as="geometry" />
+        <mxCell id="cp1_oci1" parent="cp1_box" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#ffffff;strokeColor=#9673a6;fontStyle=1" value="OCI Worker 1&#xa;(app-controller)" vertex="1">
+          <mxGeometry height="50" width="110" x="320" y="30" as="geometry" />
         </mxCell>
-        
-        <mxCell id="cp1_oci2" value="OCI Worker 2&#10;(argocd-server)" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#ffffff;strokeColor=#9673a6;fontStyle=1" vertex="1" parent="cp1_box">
-          <mxGeometry x="440" y="30" width="110" height="50" as="geometry" />
+        <mxCell id="cp1_oci2" parent="cp1_box" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#ffffff;strokeColor=#9673a6;fontStyle=1" value="OCI Worker 2&#xa;(argocd-server)" vertex="1">
+          <mxGeometry height="50" width="110" x="440" y="30" as="geometry" />
         </mxCell>
-        
-        <!-- Tailscale Mesh Network inside CP1 -->
-        <mxCell id="cp1_tailscale_desc" value="Inter-Node Comms: Tailscale Mesh (100.x.x.x)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=2;fontSize=11;fontColor=#666666;" vertex="1" parent="cp1_box">
-          <mxGeometry x="130" y="100" width="300" height="20" as="geometry" />
+        <mxCell id="cp1_tailscale_desc" parent="cp1_box" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=2;fontSize=11;fontColor=#666666;" value="Inter-Node Comms: Tailscale Mesh (100.x.x.x)" vertex="1">
+          <mxGeometry height="20" width="300" x="130" y="100" as="geometry" />
         </mxCell>
         <mxCell id="cp1_tailscale_line" edge="1" parent="cp1_box">
-          <mxGeometry width="50" height="50" relative="1" as="geometry">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
             <mxPoint x="40" y="90" as="sourcePoint" />
             <mxPoint x="520" y="90" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-
-        <!-- K8s API in Tencent -->
-        <mxCell id="tencent_api" value="Tencent K3s API&#10;(TCP 6443)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1" vertex="1" parent="1">
-          <mxGeometry x="230" y="470" width="120" height="50" as="geometry" />
+        <mxCell id="tencent_api" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1" value="Tencent K3s API&#xa;(TCP 6443)" vertex="1">
+          <mxGeometry height="50" width="120" x="410" y="480" as="geometry" />
         </mxCell>
-
-        <!-- ArgoCD Application Controller -> Tencent API -->
         <mxCell id="argo_to_tencent" edge="1" parent="1" source="cp1_oci1" target="tencent_api">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="label_argo_sync" value="2. Apply Gateway API YAMLs" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#666666;fontStyle=2;backgroundColor=#ffffff;" vertex="1" connectable="0" parent="argo_to_tencent">
-          <mxGeometry x="-0.2" relative="1" as="geometry">
+        <mxCell id="label_argo_sync" connectable="0" parent="argo_to_tencent" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#666666;fontStyle=2;backgroundColor=#ffffff;" value="2. Apply Gateway API YAMLs" vertex="1">
+          <mxGeometry relative="1" x="-0.2" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-
-        <!-- DP1 (Tencent KIC) -->
-        <mxCell id="dp1_box" value="Target Cluster 1 (Kong CP + DP)" style="swimlane;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1" vertex="1" parent="1">
-          <mxGeometry x="100" y="530" width="300" height="150" as="geometry" />
+        <mxCell id="dp1_box" parent="1" style="swimlane;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1" value="Target Cluster 1 (Kong CP + DP)" vertex="1">
+          <mxGeometry height="150" width="300" x="80" y="480" as="geometry" />
         </mxCell>
-        <mxCell id="kic1" value="Kong Control Plane (KIC)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;" vertex="1" parent="dp1_box">
-          <mxGeometry x="20" y="70" width="260" height="30" as="geometry" />
+        <mxCell id="kic1" parent="dp1_box" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;" value="Kong Control Plane (KIC)" vertex="1">
+          <mxGeometry height="30" width="260" x="20" y="70" as="geometry" />
         </mxCell>
-                <mxCell id="proxy1" value="Kong Data Plane (Proxy)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontStyle=1" vertex="1" parent="dp1_box">
-          <mxGeometry x="20" y="110" width="260" height="30" as="geometry" />
+        <mxCell id="proxy1" parent="dp1_box" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontStyle=1" value="Kong Data Plane (Proxy)" vertex="1">
+          <mxGeometry height="30" width="260" x="20" y="110" as="geometry" />
         </mxCell>
-        <mxCell id="gw_api" value="Gateway API (HTTPRoute / Gateway)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;dashed=1" vertex="1" parent="dp1_box">
-          <mxGeometry x="20" y="30" width="260" height="30" as="geometry" />
+        <mxCell id="gw_api" parent="dp1_box" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;dashed=1" value="Gateway API (HTTPRoute / Gateway)" vertex="1">
+          <mxGeometry height="30" width="260" x="20" y="30" as="geometry" />
         </mxCell>
-
         <mxCell id="tencent_api_to_gw" edge="1" parent="1" source="tencent_api" target="gw_api">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="gw_to_kic" edge="1" parent="1" source="gw_api" target="kic1" style="dashed=1;">
+        <mxCell id="gw_to_kic" edge="1" parent="1" source="gw_api" style="dashed=1;" target="kic1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="label_watch" value="Watch / Listen" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#666666;fontStyle=2;backgroundColor=#ffffff;" vertex="1" connectable="0" parent="gw_to_kic">
-          <mxGeometry x="0.1" relative="1" as="geometry">
+        <mxCell id="label_watch" connectable="0" parent="gw_to_kic" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#666666;fontStyle=2;backgroundColor=#ffffff;" value="Watch / Listen" vertex="1">
+          <mxGeometry relative="1" x="0.1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="kic_to_proxy" edge="1" parent="1" source="kic1" target="proxy1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="label_push" value="Push Kong Config" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#666666;fontStyle=2;backgroundColor=#ffffff;" vertex="1" connectable="0" parent="kic_to_proxy">
-          <mxGeometry x="0.1" relative="1" as="geometry">
+        <mxCell id="label_push" connectable="0" parent="kic_to_proxy" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#666666;fontStyle=2;backgroundColor=#ffffff;" value="Push Kong Config" vertex="1">
+          <mxGeometry relative="1" x="0.1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-
-        <!-- CP2 Box -->
-        <mxCell id="cp2_box" value="Control Plane 2 (CP2: Self-hosted Runner + decK)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#b85450;strokeWidth=2;dashed=1;verticalAlign=top;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="710" y="230" width="500" height="150" as="geometry" />
+        <mxCell id="cp2_box" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#b85450;strokeWidth=2;dashed=1;verticalAlign=top;fontStyle=1;" value="Control Plane 2 (CP2: Self-hosted Runner + decK)" vertex="1">
+          <mxGeometry height="150" width="500" x="710" y="230" as="geometry" />
         </mxCell>
-        <mxCell id="gh_actions_runner" value="actions-runner.service&#10;(Outbound Long-Polling)" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#ffffff;strokeColor=#b85450;fontStyle=1" vertex="1" parent="cp2_box">
-          <mxGeometry x="20" y="40" width="160" height="60" as="geometry" />
+        <mxCell id="gh_actions_runner" parent="cp2_box" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#ffffff;strokeColor=#b85450;fontStyle=1" value="actions-runner.service&#xa;(Outbound Long-Polling)" vertex="1">
+          <mxGeometry height="60" width="160" x="20" y="40" as="geometry" />
         </mxCell>
-        <mxCell id="deck_tool" value="/usr/local/bin/deck&#10;(decK Sync Tool)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1" vertex="1" parent="cp2_box">
-          <mxGeometry x="240" y="35" width="140" height="70" as="geometry" />
+        <mxCell id="deck_tool" parent="cp2_box" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1" value="/usr/local/bin/deck&#xa;(decK Sync Tool)" vertex="1">
+          <mxGeometry height="70" width="140" x="240" y="35" as="geometry" />
         </mxCell>
         <mxCell id="run2deck" edge="1" parent="cp2_box" source="gh_actions_runner" target="deck_tool">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="cp2_desc" value="Reads: .github/workflows/deploy-dp2.yml" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontColor=#666666;" vertex="1" parent="cp2_box">
-          <mxGeometry x="20" y="110" width="250" height="20" as="geometry" />
+        <mxCell id="cp2_desc" parent="cp2_box" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontColor=#666666;" value="Reads: .github/workflows/deploy-dp2.yml" vertex="1">
+          <mxGeometry height="20" width="250" x="20" y="110" as="geometry" />
         </mxCell>
-
-        <!-- DP2 (GCP VM) -->
-        <mxCell id="dp2_box" value="Target Env 2 (Kong DP-only)" style="swimlane;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1" vertex="1" parent="1">
-          <mxGeometry x="720" y="400" width="480" height="150" as="geometry" />
+        <mxCell id="dp2_box" parent="1" style="swimlane;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1" value="Target Env 2 (Kong DP-only)" vertex="1">
+          <mxGeometry height="150" width="480" x="720" y="400" as="geometry" />
         </mxCell>
-        <mxCell id="vm_kong" value="Kong DB-less Proxy (kong.service)&#10;Listens internally on 127.0.0.1:8001" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontStyle=1" vertex="1" parent="dp2_box">
-          <mxGeometry x="20" y="40" width="440" height="40" as="geometry" />
+        <mxCell id="vm_kong" parent="dp2_box" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontStyle=1" value="Kong DB-less Proxy (kong.service)&#xa;Listens internally on 127.0.0.1:8001" vertex="1">
+          <mxGeometry height="40" width="440" x="20" y="40" as="geometry" />
         </mxCell>
-        <mxCell id="custom_plugin" value="Custom Lua Plugin: Fetch Identity Token&#10;(Bound to GCE Service Account)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=0" vertex="1" parent="dp2_box">
-          <mxGeometry x="20" y="100" width="440" height="40" as="geometry" />
+        <mxCell id="custom_plugin" parent="dp2_box" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=0" value="Custom Lua Plugin: Fetch Identity Token&#xa;(Bound to GCE Service Account)" vertex="1">
+          <mxGeometry height="40" width="440" x="20" y="100" as="geometry" />
         </mxCell>
-
-        <!-- Upstreams -->
-        <mxCell id="k8s_svc" value="Quarkus SVCS" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1" vertex="1" parent="1">
-          <mxGeometry x="175" y="660" width="150" height="70" as="geometry" />
+        <mxCell id="k8s_svc" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1" value="Quarkus SVCS" vertex="1">
+          <mxGeometry height="70" width="150" x="155" y="650" as="geometry" />
         </mxCell>
-        <mxCell id="cr_svc" value="Cloud Run (Internal Ingress)&#10;Google Front End (GFE)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1" vertex="1" parent="1">
-          <mxGeometry x="865" y="610" width="190" height="70" as="geometry" />
+        <mxCell id="cr_svc" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1" value="Cloud Run (Internal Ingress)&#xa;Google Front End (GFE)" vertex="1">
+          <mxGeometry height="70" width="190" x="865" y="610" as="geometry" />
         </mxCell>
-
-        <!-- Connections -->
-        <!-- Pulls -->
         <mxCell id="pull1" edge="1" parent="1" source="cp1_aws" target="github_k8s_code">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
@@ -170,8 +132,8 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="label_pull1" value="1. Git Pull (Fetch YAMLs)" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#666666;fontStyle=2;backgroundColor=#ffffff;" vertex="1" connectable="0" parent="pull1">
-          <mxGeometry x="0.15" relative="1" as="geometry">
+        <mxCell id="label_pull1" connectable="0" parent="pull1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#666666;fontStyle=2;backgroundColor=#ffffff;" value="1. Git Pull (Fetch YAMLs)" vertex="1">
+          <mxGeometry relative="1" x="0.15" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
@@ -183,30 +145,25 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        
-        <!-- decK to VM Admin API -->
         <mxCell id="deck_to_vm" edge="1" parent="1" source="deck_tool" target="vm_kong">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="label_deck" value="deck sync (http://127.0.0.1:8001)" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="deck_to_vm">
-          <mxGeometry x="0.2" relative="1" as="geometry">
+        <mxCell id="label_deck" connectable="0" parent="deck_to_vm" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="deck sync (http://127.0.0.1:8001)" vertex="1">
+          <mxGeometry relative="1" x="0.2" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-
-        <!-- Routing -->
         <mxCell id="rt1" edge="1" parent="1" source="proxy1" target="k8s_svc">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="rt2" edge="1" parent="1" source="custom_plugin" target="cr_svc">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="label_auth" value="Authorization: Bearer &lt;ID_TOKEN&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="rt2">
-          <mxGeometry x="-0.1" relative="1" as="geometry">
+        <mxCell id="label_auth" connectable="0" parent="rt2" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Authorization: Bearer &lt;ID_TOKEN&gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-
       </root>
     </mxGraphModel>
   </diagram>
