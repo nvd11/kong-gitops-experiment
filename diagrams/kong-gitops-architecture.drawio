@@ -95,23 +95,33 @@
           <mxGeometry x="100" y="530" width="300" height="150" as="geometry" />
         </mxCell>
         <mxCell id="kic1" value="Kong Control Plane (KIC)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;" vertex="1" parent="dp1_box">
-          <mxGeometry x="20" y="30" width="260" height="30" as="geometry" />
-        </mxCell>
-                <mxCell id="proxy1" value="Kong Data Plane (Proxy)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontStyle=1" vertex="1" parent="dp1_box">
           <mxGeometry x="20" y="70" width="260" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="gw_api" value="Gateway API (HTTPRoute / Gateway)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;dashed=1" vertex="1" parent="dp1_box">
+                <mxCell id="proxy1" value="Kong Data Plane (Proxy)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontStyle=1" vertex="1" parent="dp1_box">
           <mxGeometry x="20" y="110" width="260" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="gw_api" value="Gateway API (HTTPRoute / Gateway)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;dashed=1" vertex="1" parent="dp1_box">
+          <mxGeometry x="20" y="30" width="260" height="30" as="geometry" />
         </mxCell>
 
         <mxCell id="tencent_api_to_gw" edge="1" parent="1" source="tencent_api" target="gw_api">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="gw_to_kic" edge="1" parent="1" source="gw_api" target="kic1">
+        <mxCell id="gw_to_kic" edge="1" parent="1" source="gw_api" target="kic1" style="dashed=1;">
           <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="label_watch" value="Watch / Listen" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#666666;fontStyle=2;backgroundColor=#ffffff;" vertex="1" connectable="0" parent="gw_to_kic">
+          <mxGeometry x="0.1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="kic_to_proxy" edge="1" parent="1" source="kic1" target="proxy1">
           <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="label_push" value="Push Kong Config" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#666666;fontStyle=2;backgroundColor=#ffffff;" vertex="1" connectable="0" parent="kic_to_proxy">
+          <mxGeometry x="0.1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
         </mxCell>
 
         <!-- CP2 Box -->
