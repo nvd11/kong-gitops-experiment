@@ -15,7 +15,7 @@
           <mxGeometry x="100" y="50" width="1080" height="80" as="geometry" />
         </mxCell>
         
-        <mxCell id="github_k8s_code" value="k8s-dp/ (K8s CRDs)&#10;Target: DP1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+        <mxCell id="github_k8s_code" value="k8s-dp/ (Gateway API: HTTPRoute)&#10;Target: Cluster 1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
           <mxGeometry x="250" y="80" width="180" height="40" as="geometry" />
         </mxCell>
         
