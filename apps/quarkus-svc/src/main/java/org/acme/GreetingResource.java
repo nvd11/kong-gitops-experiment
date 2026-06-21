@@ -8,7 +8,7 @@ import jakarta.ws.rs.core.MediaType;
 import java.util.Map;
 
 import io.vertx.core.http.HttpServerRequest;
-import io.vertx.mutiny.core.http.HttpServer;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,0 +1,30 @@
+name: Quarkus API PR Validation
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'apps/quarkus-svc/**'
+      - '!apps/quarkus-svc/deployment.yaml' # 🎯 PR 阶段同样只关心业务代码的变动，防止不相关的提交浪费编译资源
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
+          cache-dependency-path: 'apps/quarkus-svc/pom.xml' # 🎯 精准缓存子目录 Maven 依赖，加速测试
+
+      - name: Verify Compilation and Run Unit Tests
+        run: |
+          cd apps/quarkus-svc
+          mvn clean test

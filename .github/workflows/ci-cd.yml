@@ -1,0 +1,77 @@
+name: Quarkus API GitOps CI/CD
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'apps/quarkus-svc/**'
+      - '!apps/quarkus-svc/deployment.yaml' # 🎯 极度关键：排除部署清单本身，彻底杜绝 GitOps 死循环！
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
+          cache-dependency-path: 'apps/quarkus-svc/pom.xml' # 🎯 子目录缓存精确定位！
+
+      - name: Build Quarkus Application with Maven
+        run: |
+          cd apps/quarkus-svc
+          mvn clean package
+
+      - name: Log in to GitHub Container Registry (GHCR)
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and Push Docker Image
+        run: |
+          cd apps/quarkus-svc
+          # 转换为小写，防止因为 GitHub 用户名包含大写字母而导致 Docker Registry 报错
+          OWNER_LC=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          
+          # we defined ghCR PATH here!!
+          IMAGE_NAME=ghcr.io/$OWNER_LC/my-quarkus-svc
+          TAG=${{ github.sha }}
+          
+          docker build -f src/main/docker/Dockerfile.jvm -t $IMAGE_NAME:$TAG -t $IMAGE_NAME:latest .
+          docker push $IMAGE_NAME:$TAG
+          docker push $IMAGE_NAME:latest
+
+      - name: Update Kubernetes Deployment Manifest
+        run: |
+          cd apps/quarkus-svc
+          OWNER_LC=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          IMAGE_NAME=ghcr.io/$OWNER_LC/my-quarkus-svc
+          TAG=${{ github.sha }}
+          
+          # 优雅替换 deployment.yaml 中的镜像路径和拉取策略
+          sed -i "s|image: .*|image: $IMAGE_NAME:$TAG|g" deployment.yaml
+          sed -i "s|imagePullPolicy: .*|imagePullPolicy: IfNotPresent|g" deployment.yaml
+
+      - name: Commit and Push Manifest Changes back to Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          
+          git add apps/quarkus-svc/deployment.yaml
+          git commit -m "ci: automatically update image tag to ${ENV_TAG} [skip ci]" -m "Triggered by commit ${{ github.sha }}" || echo "No changes to commit"
+          git push
+        env:
+          ENV_TAG: ${{ github.sha }}
