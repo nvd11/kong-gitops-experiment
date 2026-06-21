@@ -15,8 +15,8 @@ spec:
     spec:
       containers:
       - name: quarkus
-        image: my-quarkus-svc:v1
-        imagePullPolicy: Never
+        image: ghcr.io/nvd11/my-quarkus-svc:625ba59193396b76230260c3054dd8387ea8cd09
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
 ---
