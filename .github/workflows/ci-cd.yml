@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - 'apps/quarkus-svc/**'
-      - '!apps/quarkus-svc/deployment.yaml' # 🎯 极度关键：排除部署清单本身，彻底杜绝 GitOps 死循环！
+      - '.github/workflows/ci-cd.yml'
 
 permissions:
   contents: write
@@ -26,7 +26,7 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
           cache: 'maven'
-          cache-dependency-path: 'apps/quarkus-svc/pom.xml' # 🎯 子目录缓存精确定位！
+          cache-dependency-path: 'apps/quarkus-svc/pom.xml'
 
       - name: Build Quarkus Application with Maven
         run: |
@@ -43,10 +43,7 @@ jobs:
       - name: Build and Push Docker Image
         run: |
           cd apps/quarkus-svc
-          # 转换为小写，防止因为 GitHub 用户名包含大写字母而导致 Docker Registry 报错
           OWNER_LC=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
-          
-          # we defined ghCR PATH here!!
           IMAGE_NAME=ghcr.io/$OWNER_LC/my-quarkus-svc
           TAG=${{ github.sha }}
           
@@ -54,24 +51,24 @@ jobs:
           docker push $IMAGE_NAME:$TAG
           docker push $IMAGE_NAME:latest
 
-      - name: Update Kubernetes Deployment Manifest
+      - name: Checkout CD Manifests Repo (Cross-Repo Push)
+        uses: actions/checkout@v3
+        with:
+          repository: nvd11/my-argocd-manifests
+          token: ${{ secrets.CD_GIT_PAT }} # 必须在当前仓库配置含有对 CD 库写权限的 PAT 凭证
+          path: my-argocd-manifests
+
+      - name: Update Image Tag in ArgoCD App Manifest
         run: |
-          cd apps/quarkus-svc
-          OWNER_LC=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
-          IMAGE_NAME=ghcr.io/$OWNER_LC/my-quarkus-svc
+          cd my-argocd-manifests
           TAG=${{ github.sha }}
           
-          # 优雅替换 deployment.yaml 中的镜像路径和拉取策略
-          sed -i "s|image: .*|image: $IMAGE_NAME:$TAG|g" deployment.yaml
-          sed -i "s|imagePullPolicy: .*|imagePullPolicy: IfNotPresent|g" deployment.yaml
-
-      - name: Commit and Push Manifest Changes back to Git
-        run: |
+          # 使用 sed 精准替换 ArgoCD Application 清单中的 tag
+          sed -i -E "s/tag: [a-f0-9]+(.*)/tag: ${TAG}\1/g" argocd-apps/quarkus-svc-app.yaml
+          
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
-          git add apps/quarkus-svc/deployment.yaml
-          git commit -m "ci: automatically update image tag to ${ENV_TAG} [skip ci]" -m "Triggered by commit ${{ github.sha }}" || echo "No changes to commit"
+          git add argocd-apps/quarkus-svc-app.yaml
+          git commit -m "ci: auto-update quarkus-svc image tag to ${TAG} [skip ci]" || echo "No changes to commit"
           git push
-        env:
-          ENV_TAG: ${{ github.sha }}
