@@ -92,14 +92,9 @@
 **目标**：让 OCI 上的 ArgoCD 接管 GitHub 仓库，并通过公网自动在腾讯云拉起 Quarkus 业务 Pod，自动挂载 Kong 路由。
 
 1. **在 GitHub 补充 K8s YAML**：
-   在仓库的 `k8s-dp/business-apps/` 目录下推入 `Deployment` 和 `Service` 的 YAML。
-   在 `k8s-dp/gateway-config/` 目录下推入 `Ingress` YAML（标注 `ingressClassName: kong-k8s`）。
+   在 CD 仓库 (`my-argocd-manifests`) 的 `argocd-apps/` 目录下推入 `quarkus-svc-app.yaml`。
 2. **配置 ArgoCD App (跨集群 Target)**：
-   在 OCI 的 ArgoCD UI 中新建 App：
-   *   **Repository URL**: `https://github.com/nvd11/kong-gitops-experiment.git`
-   *   **Path**: `k8s-dp`
-   *   **Cluster URL**: 选择 **Tencent K3s 集群的 API URL** (不再是本地的 `https://kubernetes.default.svc`)
-   *   **Namespace**: `default`
+   在 OCI 的 ArgoCD 已经被通过 `root-bootstrap-app` 自动接管，不再需要手工创建。
 3. **见证跨云调度的时刻**：
    点击 `SYNC`。OCI 的机器拉取 GitHub 代码，生成部署指令并通过 `TCP 6443` 下发至腾讯云，腾讯云的微服务实例与 Kong 网关规则将瞬间生效！
 4. **终极验证**：
