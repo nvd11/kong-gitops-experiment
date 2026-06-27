@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - 'apps/quarkus-svc/**'
-      - '.github/workflows/ci.yml'
+      - '.github/workflows/quarkus-ci.yml'
 
 permissions:
   contents: read

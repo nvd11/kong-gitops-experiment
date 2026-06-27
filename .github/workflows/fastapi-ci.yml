@@ -1,0 +1,46 @@
+name: FastAPI Service CI Build
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'apps/fastapi-svc/**'
+      - '.github/workflows/fastapi-ci.yml'
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Log in to GitHub Container Registry (GHCR)
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and Push Docker Image
+        run: |
+          cd apps/fastapi-svc
+          OWNER_LC=$(echo "${{ github.repository_owner }}" | tr "[:upper:]" "[:lower:]")
+          IMAGE_NAME=ghcr.io/$OWNER_LC/my-fastapi-svc
+          TAG=${{ github.sha }}
+          
+          docker build -t $IMAGE_NAME:$TAG -t $IMAGE_NAME:latest .
+          docker push $IMAGE_NAME:$TAG
+          docker push $IMAGE_NAME:latest
+
+      - name: Trigger CD Repo (Repository Dispatch)
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.CD_GIT_PAT }}
+          repository: nvd11/my-argocd-manifests
+          event-type: update-image-tag
+          client-payload: '{"image_tag": "${{ github.sha }}", "svc_name": "fastapi-svc"}'
