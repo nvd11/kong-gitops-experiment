@@ -12,7 +12,7 @@ import io.vertx.core.http.HttpServerRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Path("/svc1")
+@Path("/hello")
 public class GreetingResource {
     private static final Logger logger = LoggerFactory.getLogger(GreetingResource.class);
 
