@@ -12,16 +12,20 @@ import io.vertx.core.http.HttpServerRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Path("/hello")
+@Path("/")
 public class GreetingResource {
     private static final Logger logger = LoggerFactory.getLogger(GreetingResource.class);
 
 
     @GET
+    public String health() {
+        return "ok";
+    }
+
+    @GET
+    @Path("/hello")
     @Produces(MediaType.APPLICATION_JSON)
     public Map<String, String> hello(@Context HttpServerRequest request) {
-
-        
 
         //get the direct raw ip of client(usually it's the ip of kong gaeway)
         String rawRemoteIp = request.remoteAddress().host();
@@ -37,9 +41,6 @@ public class GreetingResource {
         String clientIp = xForwardedFor != null ? xForwardedFor : (xRealIp != null ? xRealIp : rawRemoteIp);
         logger.info("Determined client IP: {}", clientIp);
       
-
-
-
         return Map.of(
             "client-ip", clientIp,
             "status", "ok",
