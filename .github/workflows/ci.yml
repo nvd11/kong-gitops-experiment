@@ -1,4 +1,4 @@
-name: Quarkus API GitOps CI/CD
+name: Quarkus API CI Build
 
 on:
   push:
@@ -6,16 +6,15 @@ on:
       - main
     paths:
       - 'apps/quarkus-svc/**'
-      - '.github/workflows/ci-cd.yml'
+      - '.github/workflows/ci.yml'
 
 permissions:
-  contents: write
+  contents: read
   packages: write
 
 jobs:
-  build-and-deploy:
+  build-and-push:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -51,24 +50,10 @@ jobs:
           docker push $IMAGE_NAME:$TAG
           docker push $IMAGE_NAME:latest
 
-      - name: Checkout CD Manifests Repo (Cross-Repo Push)
-        uses: actions/checkout@v3
+      - name: Trigger CD Repo (Repository Dispatch)
+        uses: peter-evans/repository-dispatch@v2
         with:
+          token: ${{ secrets.CD_GIT_PAT }}
           repository: nvd11/my-argocd-manifests
-          token: ${{ secrets.CD_GIT_PAT }} # 必须在当前仓库配置含有对 CD 库写权限的 PAT 凭证
-          path: my-argocd-manifests
-
-      - name: Update Image Tag in ArgoCD App Manifest
-        run: |
-          cd my-argocd-manifests
-          TAG=${{ github.sha }}
-          
-          # 使用 sed 精准替换 ArgoCD Application 清单中的 tag
-          sed -i -E "s/tag: [a-f0-9]+(.*)/tag: ${TAG}\1/g" argocd-apps/quarkus-svc-app.yaml
-          
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          
-          git add argocd-apps/quarkus-svc-app.yaml
-          git commit -m "ci: auto-update quarkus-svc image tag to ${TAG} [skip ci]" || echo "No changes to commit"
-          git push
+          event-type: update-image-tag
+          client-payload: '{"image_tag": "${{ github.sha }}", "svc_name": "quarkus-svc"}'
